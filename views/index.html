@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kegiatan KPU</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    .prose {
+      color: #374151;
+      line-height: 1.7;
+    }
+    
+    .prose img {
+      border-radius: 0.5rem;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+    
+    .prose pre {
+      background-color: #1f2937;
+      color: #f9fafb;
+      border-radius: 0.5rem;
+      padding: 1rem;
+      overflow-x: auto;
+    }
+    
+    .prose code:not(pre code) {
+      background-color: #f1f5f9;
+      color: #334155;
+      padding: 0.125rem 0.25rem;
+      border-radius: 0.25rem;
+      font-size: 0.875em;
+    }
+    
+    .prose blockquote {
+      border-left: 3px solid #3b82f6;
+      background-color: #f8fafc;
+      padding: 1rem;
+      margin: 1.5rem 0;
+      border-radius: 0.25rem;
+    }
+    
+    .prose a {
+      color: #3b82f6;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    
+    .prose a:hover {
+      color: #1d4ed8;
+      text-decoration: underline;
+    }
+
+    .card-hover {
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .card-hover:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    }
+
+    .fade-in {
+      animation: fadeIn 0.4s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .slide-in {
+      animation: slideIn 0.3s ease-out;
+    }
+
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateX(30px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+  </style>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'primary': '#2563eb',
+            'primary-dark': '#1d4ed8',
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-gray-50 min-h-screen">
+
+  <!-- Header -->
+  <header class="bg-white shadow-sm border-b border-gray-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+        <div class="flex items-center space-x-3">
+          <i class="fas fa-vote-yea text-primary text-2xl"></i>
+          <h1 class="text-xl font-semibold text-gray-900">Kegiatan KPU</h1>
+        </div>
+        <div class="flex items-center space-x-4">
+          <button id="view-toggle" class="p-2 text-gray-500 hover:text-primary transition-colors">
+            <i class="fas fa-th-large" id="view-icon"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    
+    <!-- Loading State -->
+    <div id="loading" class="flex flex-col items-center justify-center py-20">
+      <div class="animate-spin rounded-full h-8 w-8 border-2 border-primary border-t-transparent"></div>
+      <p class="mt-4 text-gray-600">Memuat kegiatan...</p>
+    </div>
+
+    <!-- Error State -->
+    <div id="error" class="hidden">
+      <div class="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
+        <div class="flex items-center">
+          <i class="fas fa-exclamation-triangle text-red-500 mr-3"></i>
+          <div>
+            <h3 class="text-red-800 font-medium">Terjadi Kesalahan</h3>
+            <p class="text-red-700 text-sm mt-1" id="error-message"></p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Content Container -->
+    <div id="main-content" class="hidden">
+      
+      <!-- Grid View -->
+      <div id="grid-view">
+        <!-- Search and Filter -->
+        <div class="mb-8">
+          <div class="relative max-w-md">
+            <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+            <input 
+              type="text" 
+              id="search-input"
+              placeholder="Cari kegiatan..." 
+              class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all"
+            >
+          </div>
+        </div>
+
+        <!-- Activities Grid -->
+        <div id="activities-grid" class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          <!-- Cards will be inserted here -->
+        </div>
+
+        <!-- Empty State -->
+        <div id="empty-state" class="hidden text-center py-20">
+          <i class="fas fa-calendar-times text-gray-300 text-6xl mb-4"></i>
+          <h3 class="text-lg font-medium text-gray-900 mb-2">Tidak Ada Kegiatan</h3>
+          <p class="text-gray-500">Belum ada kegiatan yang tersedia saat ini.</p>
+        </div>
+      </div>
+
+      <!-- Detail View -->
+      <div id="detail-view" class="hidden fade-in">
+        <div class="mb-6">
+          <button id="back-button" class="inline-flex items-center text-primary hover:text-primary-dark transition-colors group">
+            <i class="fas fa-arrow-left mr-2 group-hover:-translate-x-1 transition-transform"></i>
+            <span>Kembali ke Daftar</span>
+          </button>
+        </div>
+
+        <article class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+          <!-- Article Header -->
+          <div id="article-header" class="p-6 border-b border-gray-100">
+            <!-- Content will be inserted here -->
+          </div>
+
+          <!-- Article Content -->
+          <div id="article-content" class="p-6">
+            <div id="detail-loading" class="hidden flex items-center justify-center py-12">
+              <div class="animate-spin rounded-full h-6 w-6 border-2 border-primary border-t-transparent mr-3"></div>
+              <span class="text-gray-600">Memuat detail...</span>
+            </div>
+            <div id="article-body" class="prose prose-gray max-w-none">
+              <!-- Article content will be inserted here -->
+            </div>
+          </div>
+        </article>
+      </div>
+
+    </div>
+  </main>
+
+  <script>
+    // DOM Elements
+    const loadingEl = document.getElementById('loading');
+    const errorEl = document.getElementById('error');
+    const errorMessageEl = document.getElementById('error-message');
+    const mainContentEl = document.getElementById('main-content');
+    const gridViewEl = document.getElementById('grid-view');
+    const detailViewEl = document.getElementById('detail-view');
+    const activitiesGridEl = document.getElementById('activities-grid');
+    const emptyStateEl = document.getElementById('empty-state');
+    const searchInputEl = document.getElementById('search-input');
+    const backButtonEl = document.getElementById('back-button');
+    const detailLoadingEl = document.getElementById('detail-loading');
+    const articleHeaderEl = document.getElementById('article-header');
+    const articleBodyEl = document.getElementById('article-body');
+
+    let activitiesData = [];
+    let filteredData = [];
+
+    // Utility Functions
+    function showError(message) {
+      console.error('Error:', message);
+      errorMessageEl.textContent = message;
+      errorEl.classList.remove('hidden');
+      loadingEl.classList.add('hidden');
+    }
+
+    function hideError() {
+      errorEl.classList.add('hidden');
+    }
+
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text || '';
+      return div.innerHTML;
+    }
+
+    function formatDate(dateString) {
+      if (!dateString) return '';
+      const date = new Date(dateString);
+      return date.toLocaleDateString('id-ID', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      });
+    }
+
+    function showGridView() {
+      detailViewEl.classList.add('hidden');
+      gridViewEl.classList.remove('hidden');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function showDetailView() {
+      gridViewEl.classList.add('hidden');
+      detailViewEl.classList.remove('hidden');
+      detailViewEl.classList.add('fade-in');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Create Activity Card
+function createActivityCard(item) {
+  const card = document.createElement('div');
+  card.className = 'bg-white rounded-lg border border-gray-200 overflow-hidden card-hover cursor-pointer';
+
+  const hasValidImage = item.image && item.image.startsWith('http');
+  
+  const imageHtml = hasValidImage
+    ? `
+      <div class="relative">
+        <img 
+          src="${item.image}" 
+          alt="${escapeHtml(item.name)}" 
+          class="w-full h-48 object-cover" 
+          loading="lazy"
+          onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+        />
+        <div style="display:none;" class="h-48 bg-gray-100 flex items-center justify-center">
+          <i class="fas fa-image text-gray-400 text-3xl"></i>
+        </div>
+      </div>`
+    : `
+      <div class="h-48 bg-gray-100 flex items-center justify-center">
+        <i class="fas fa-image text-gray-400 text-3xl"></i>
+      </div>`;
+
+  const captionHtml = item.caption
+    ? `<p class="text-sm text-gray-500 mt-1 italic">${escapeHtml(item.caption)}</p>`
+    : '';
+
+  card.innerHTML = `
+    ${imageHtml}
+    <div class="p-4">
+      <h3 class="font-semibold text-gray-900 mb-2 line-clamp-2 leading-snug">
+        ${escapeHtml(item.name || 'Tanpa Nama')}
+      </h3>
+      <div class="flex items-center text-sm text-gray-500">
+        <i class="far fa-calendar mr-2"></i>
+        <span>${escapeHtml(item.hari || '')} ${item.tanggal ? '• ' + formatDate(item.tanggal) : ''}</span>
+      </div>
+      ${captionHtml}
+    </div>
+  `;
+
+  card.addEventListener('click', () => loadActivityDetail(item.id, item));
+  return card;
+}
+
+
+    // Search and Filter
+    function filterActivities(searchTerm) {
+      const term = searchTerm.toLowerCase();
+      filteredData = activitiesData.filter(item => 
+        (item.name || '').toLowerCase().includes(term) ||
+        (item.hari || '').toLowerCase().includes(term)
+      );
+      renderActivities();
+    }
+
+    // Render Activities Grid
+    function renderActivities() {
+      activitiesGridEl.innerHTML = '';
+      
+      if (filteredData.length === 0) {
+        emptyStateEl.classList.remove('hidden');
+        return;
+      }
+      
+      emptyStateEl.classList.add('hidden');
+      filteredData.forEach(item => {
+        const card = createActivityCard(item);
+        activitiesGridEl.appendChild(card);
+      });
+    }
+
+    // Load Activities List
+    async function loadActivities() {
+      try {
+        hideError();
+        loadingEl.classList.remove('hidden');
+        
+        const response = await fetch('/api/kegiatan');
+        
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+        
+        const contentType = response.headers.get('content-type');
+        if (!contentType || !contentType.includes('application/json')) {
+          throw new Error('Server tidak mengembalikan JSON yang valid');
+        }
+        
+        const data = await response.json();
+        
+        if (!Array.isArray(data)) {
+          throw new Error('Format data tidak valid dari server');
+        }
+        
+        activitiesData = data;
+        filteredData = [...data];
+        
+        loadingEl.classList.add('hidden');
+        mainContentEl.classList.remove('hidden');
+        
+        renderActivities();
+        
+      } catch (error) {
+        showError(error.message);
+      }
+    }
+
+    // Load Activity Detail
+    async function loadActivityDetail(id, itemData) {
+      try {
+        hideError();
+        showDetailView();
+        
+        // Show article header immediately
+        articleHeaderEl.innerHTML = `
+          <div class="flex items-start space-x-4">
+            <div class="flex-shrink-0">
+              <div class="w-16 h-16 bg-primary/10 rounded-lg flex items-center justify-center">
+                <i class="fas fa-calendar-alt text-primary text-xl"></i>
+              </div>
+            </div>
+            <div class="flex-1 min-w-0">
+              <h1 class="text-2xl font-bold text-gray-900 mb-2">${escapeHtml(itemData.name || 'Detail Kegiatan')}</h1>
+              <div class="flex items-center text-gray-600 space-x-4">
+                <div class="flex items-center">
+                  <i class="far fa-calendar mr-2"></i>
+                  <span>${escapeHtml(itemData.hari || '')} ${itemData.tanggal ? '• ' + formatDate(itemData.tanggal) : ''}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+        
+        // Show loading for content
+        detailLoadingEl.classList.remove('hidden');
+        articleBodyEl.innerHTML = '';
+        
+        console.log('Loading detail for ID:', id);
+        
+        const response = await fetch(`/api/kegiatan/${id}`);
+        
+        if (!response.ok) {
+          if (response.status === 404) {
+            throw new Error('Kegiatan tidak ditemukan');
+          } else if (response.status === 401) {
+            throw new Error('Tidak memiliki akses ke kegiatan ini');
+          } else {
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+          }
+        }
+        
+        const contentType = response.headers.get('content-type');
+        if (!contentType || !contentType.includes('application/json')) {
+          throw new Error('Server tidak mengembalikan JSON yang valid');
+        }
+        
+        const data = await response.json();
+        
+        detailLoadingEl.classList.add('hidden');
+        
+        articleBodyEl.innerHTML = data.html || '<p class="text-gray-500 italic">Tidak ada konten tersedia.</p>';
+        
+      } catch (error) {
+        detailLoadingEl.classList.add('hidden');
+        articleBodyEl.innerHTML = `
+          <div class="bg-red-50 border border-red-200 rounded-lg p-4">
+            <div class="flex items-center">
+              <i class="fas fa-exclamation-triangle text-red-500 mr-3"></i>
+              <div>
+                <h3 class="text-red-800 font-medium">Error</h3>
+                <p class="text-red-700 text-sm mt-1">${escapeHtml(error.message)}</p>
+              </div>
+            </div>
+          </div>
+        `;
+        console.error('Error loading detail:', error);
+      }
+    }
+
+    // Event Listeners
+    searchInputEl.addEventListener('input', (e) => {
+      filterActivities(e.target.value);
+    });
+
+    backButtonEl.addEventListener('click', showGridView);
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', loadActivities);
+  </script>
+
+</body>
+</html>
