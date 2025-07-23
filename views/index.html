@@ -7,76 +7,248 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+    
+    * {
+      font-family: 'Inter', sans-serif;
+    }
+
+    body {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      position: relative;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="white" opacity="0.05"/><circle cx="75" cy="75" r="1" fill="white" opacity="0.03"/><circle cx="50" cy="10" r="0.5" fill="white" opacity="0.04"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .glass-morphism {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    }
+
+    .card-glass {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    }
+
     .prose {
       color: #374151;
-      line-height: 1.7;
+      line-height: 1.8;
     }
     
     .prose img {
-      border-radius: 0.5rem;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      border-radius: 1rem;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
     }
     
     .prose pre {
-      background-color: #1f2937;
+      background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
       color: #f9fafb;
-      border-radius: 0.5rem;
-      padding: 1rem;
+      border-radius: 0.75rem;
+      padding: 1.5rem;
       overflow-x: auto;
+      border: 1px solid rgba(255, 255, 255, 0.1);
     }
     
     .prose code:not(pre code) {
-      background-color: #f1f5f9;
+      background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
       color: #334155;
-      padding: 0.125rem 0.25rem;
-      border-radius: 0.25rem;
+      padding: 0.25rem 0.5rem;
+      border-radius: 0.375rem;
       font-size: 0.875em;
+      font-weight: 500;
     }
     
     .prose blockquote {
-      border-left: 3px solid #3b82f6;
-      background-color: #f8fafc;
-      padding: 1rem;
-      margin: 1.5rem 0;
-      border-radius: 0.25rem;
+      border-left: 4px solid #3b82f6;
+      background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+      padding: 1.5rem;
+      margin: 2rem 0;
+      border-radius: 0.75rem;
+      box-shadow: 0 4px 15px rgba(59, 130, 246, 0.1);
     }
     
     .prose a {
       color: #3b82f6;
       text-decoration: none;
-      transition: color 0.2s;
+      font-weight: 500;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
     }
     
-    .prose a:hover {
-      color: #1d4ed8;
-      text-decoration: underline;
+    .prose a::after {
+      content: '';
+      position: absolute;
+      width: 0;
+      height: 2px;
+      bottom: -2px;
+      left: 0;
+      background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+      transition: width 0.3s ease;
+    }
+    
+    .prose a:hover::after {
+      width: 100%;
     }
 
     .card-hover {
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      transform: translateY(0);
     }
 
     .card-hover:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      transform: translateY(-8px) scale(1.02);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
     }
 
     .fade-in {
-      animation: fadeIn 0.4s ease-out;
+      animation: fadeIn 0.6s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
+      from { 
+        opacity: 0; 
+        transform: translateY(30px) scale(0.95); 
+      }
+      to { 
+        opacity: 1; 
+        transform: translateY(0) scale(1); 
+      }
     }
 
     .slide-in {
-      animation: slideIn 0.3s ease-out;
+      animation: slideIn 0.5s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     @keyframes slideIn {
-      from { opacity: 0; transform: translateX(30px); }
+      from { opacity: 0; transform: translateX(40px); }
       to { opacity: 1; transform: translateX(0); }
+    }
+
+    .float {
+      animation: float 6s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+    }
+
+    .gradient-text {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .search-focus {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border: 2px solid transparent;
+      background-clip: padding-box;
+      transition: all 0.3s ease;
+    }
+
+    .search-focus:focus {
+      background: rgba(255, 255, 255, 1);
+      border-color: rgba(102, 126, 234, 0.5);
+      box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-primary::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      transition: left 0.5s ease;
+    }
+
+    .btn-primary:hover::before {
+      left: 100%;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+    }
+
+    .loading-spinner {
+      width: 40px;
+      height: 40px;
+      border: 3px solid rgba(102, 126, 234, 0.3);
+      border-radius: 50%;
+      border-top-color: #667eea;
+      animation: spin 1s ease-in-out infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .stagger-animation {
+      animation: staggerFadeIn 0.6s ease-out forwards;
+      opacity: 0;
+      transform: translateY(20px);
+    }
+
+    @keyframes staggerFadeIn {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .image-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, rgba(102, 126, 234, 0.8) 0%, rgba(118, 75, 162, 0.8) 100%);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 600;
+    }
+
+    .card-hover:hover .image-overlay {
+      opacity: 1;
+    }
+
+    .parallax-bg {
+      background-attachment: fixed;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: cover;
     }
   </style>
   <script>
@@ -84,49 +256,68 @@
       theme: {
         extend: {
           colors: {
-            'primary': '#2563eb',
-            'primary-dark': '#1d4ed8',
+            'primary': '#667eea',
+            'primary-dark': '#5a67d8',
+            'secondary': '#764ba2',
+          },
+          fontFamily: {
+            'sans': ['Inter', 'sans-serif'],
           }
         }
       }
     }
   </script>
 </head>
-<body class="bg-gray-50 min-h-screen">
+<body class="min-h-screen relative">
+
+  <!-- Animated Background Elements -->
+  <div class="fixed inset-0 overflow-hidden pointer-events-none">
+    <div class="absolute -top-40 -right-40 w-80 h-80 bg-white opacity-5 rounded-full float"></div>
+    <div class="absolute top-1/2 -left-40 w-60 h-60 bg-white opacity-5 rounded-full float" style="animation-delay: -2s;"></div>
+    <div class="absolute bottom-10 right-1/4 w-40 h-40 bg-white opacity-5 rounded-full float" style="animation-delay: -4s;"></div>
+  </div>
 
   <!-- Header -->
-  <header class="bg-white shadow-sm border-b border-gray-200">
+  <header class="glass-morphism sticky top-0 z-50 border-b border-white/20">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="flex items-center justify-between h-16">
-        <div class="flex items-center space-x-3">
-          <i class="fas fa-vote-yea text-primary text-2xl"></i>
-          <h1 class="text-xl font-semibold text-gray-900">Kegiatan KPU</h1>
+      <div class="flex items-center justify-between h-20">
+        <div class="flex items-center space-x-4">
+          <div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center backdrop-blur-sm">
+            <i class="fas fa-vote-yea text-white text-xl"></i>
+          </div>
+          <div>
+            <h1 class="text-2xl font-bold text-white">Kegiatan KPU</h1>
+            <p class="text-white/70 text-sm">Komisi Pemilihan Umum</p>
+          </div>
         </div>
         <div class="flex items-center space-x-4">
-          <button id="view-toggle" class="p-2 text-gray-500 hover:text-primary transition-colors">
-            <i class="fas fa-th-large" id="view-icon"></i>
+          <button id="view-toggle" class="p-3 text-white/70 hover:text-white hover:bg-white/10 rounded-xl transition-all duration-300">
+            <i class="fas fa-th-large text-lg" id="view-icon"></i>
           </button>
         </div>
       </div>
     </div>
   </header>
 
-  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 relative z-10">
     
     <!-- Loading State -->
-    <div id="loading" class="flex flex-col items-center justify-center py-20">
-      <div class="animate-spin rounded-full h-8 w-8 border-2 border-primary border-t-transparent"></div>
-      <p class="mt-4 text-gray-600">Memuat kegiatan...</p>
+    <div id="loading" class="flex flex-col items-center justify-center py-32">
+      <div class="loading-spinner mb-6"></div>
+      <p class="text-white/80 text-lg font-medium">Memuat kegiatan...</p>
+      <p class="text-white/60 text-sm mt-2">Mohon tunggu sebentar</p>
     </div>
 
     <!-- Error State -->
-    <div id="error" class="hidden">
-      <div class="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
+    <div id="error" class="hidden mb-8">
+      <div class="card-glass rounded-2xl p-6 border border-red-200/30">
         <div class="flex items-center">
-          <i class="fas fa-exclamation-triangle text-red-500 mr-3"></i>
+          <div class="w-12 h-12 bg-red-100 rounded-xl flex items-center justify-center mr-4">
+            <i class="fas fa-exclamation-triangle text-red-500 text-xl"></i>
+          </div>
           <div>
-            <h3 class="text-red-800 font-medium">Terjadi Kesalahan</h3>
-            <p class="text-red-700 text-sm mt-1" id="error-message"></p>
+            <h3 class="text-red-800 font-semibold text-lg">Terjadi Kesalahan</h3>
+            <p class="text-red-700 mt-1" id="error-message"></p>
           </div>
         </div>
       </div>
@@ -137,54 +328,69 @@
       
       <!-- Grid View -->
       <div id="grid-view">
+        <!-- Hero Section -->
+        <div class="text-center mb-12">
+          <h2 class="text-4xl md:text-5xl font-bold text-white mb-4">
+            Kegiatan <span class="gradient-text bg-white bg-clip-text text-transparent">Terbaru</span>
+          </h2>
+          <p class="text-white/80 text-xl max-w-2xl mx-auto">
+            Ikuti perkembangan terbaru kegiatan Komisi Pemilihan Umum
+          </p>
+        </div>
+
         <!-- Search and Filter -->
-        <div class="mb-8">
-          <div class="relative max-w-md">
-            <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+        <div class="mb-12">
+          <div class="relative max-w-lg mx-auto">
+            <i class="fas fa-search absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 text-lg"></i>
             <input 
               type="text" 
               id="search-input"
-              placeholder="Cari kegiatan..." 
-              class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all"
+              placeholder="Cari kegiatan yang Anda inginkan..." 
+              class="w-full pl-12 pr-6 py-4 search-focus rounded-2xl outline-none text-lg font-medium"
             >
+            <div class="absolute right-4 top-1/2 transform -translate-y-1/2">
+              <kbd class="px-2 py-1 text-xs font-semibold text-gray-500 bg-gray-100 border border-gray-200 rounded">⌘K</kbd>
+            </div>
           </div>
         </div>
 
         <!-- Activities Grid -->
-        <div id="activities-grid" class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        <div id="activities-grid" class="grid gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           <!-- Cards will be inserted here -->
         </div>
 
         <!-- Empty State -->
-        <div id="empty-state" class="hidden text-center py-20">
-          <i class="fas fa-calendar-times text-gray-300 text-6xl mb-4"></i>
-          <h3 class="text-lg font-medium text-gray-900 mb-2">Tidak Ada Kegiatan</h3>
-          <p class="text-gray-500">Belum ada kegiatan yang tersedia saat ini.</p>
+        <div id="empty-state" class="hidden text-center py-32">
+          <div class="w-24 h-24 bg-white/10 rounded-full flex items-center justify-center mx-auto mb-6">
+            <i class="fas fa-calendar-times text-white/60 text-3xl"></i>
+          </div>
+          <h3 class="text-2xl font-semibold text-white mb-3">Tidak Ada Kegiatan</h3>
+          <p class="text-white/70 text-lg">Belum ada kegiatan yang tersedia saat ini</p>
         </div>
       </div>
 
       <!-- Detail View -->
       <div id="detail-view" class="hidden fade-in">
-        <div class="mb-6">
-          <button id="back-button" class="inline-flex items-center text-primary hover:text-primary-dark transition-colors group">
-            <i class="fas fa-arrow-left mr-2 group-hover:-translate-x-1 transition-transform"></i>
-            <span>Kembali ke Daftar</span>
+        <div class="mb-8">
+          <button id="back-button" class="inline-flex items-center text-white hover:text-white/80 transition-all duration-300 group bg-white/10 px-6 py-3 rounded-xl backdrop-blur-sm border border-white/20">
+            <i class="fas fa-arrow-left mr-3 group-hover:-translate-x-1 transition-transform text-lg"></i>
+            <span class="font-medium">Kembali ke Daftar</span>
           </button>
         </div>
 
-        <article class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+        <article class="card-glass rounded-3xl overflow-hidden">
           <!-- Article Header -->
-          <div id="article-header" class="p-6 border-b border-gray-100">
+          <div id="article-header" class="p-8 border-b border-gray-100">
             <!-- Content will be inserted here -->
           </div>
 
           <!-- Article Content -->
-          <div id="article-content" class="p-6">
-            <div id="detail-loading" class="hidden flex items-center justify-center py-12">
-              <div class="animate-spin rounded-full h-6 w-6 border-2 border-primary border-t-transparent mr-3"></div>
-              <span class="text-gray-600">Memuat detail...</span>
+          <div id="article-content" class="p-8">
+            <div id="detail-loading" class="hidden flex items-center justify-center py-20">
+              <div class="loading-spinner mr-4"></div>
+              <span class="text-gray-600 text-lg font-medium">Memuat detail...</span>
             </div>
-            <div id="article-body" class="prose prose-gray max-w-none">
+            <div id="article-body" class="prose prose-lg prose-gray max-w-none">
               <!-- Article content will be inserted here -->
             </div>
           </div>
@@ -254,66 +460,97 @@
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    // Create Activity Card
-function createActivityCard(item) {
-  const card = document.createElement('div');
-  card.className = 'bg-white rounded-lg border border-gray-200 overflow-hidden card-hover cursor-pointer';
+    // Create Activity Card with improved design
+    function createActivityCard(item, index) {
+      const card = document.createElement('div');
+      card.className = 'card-glass rounded-2xl overflow-hidden card-hover cursor-pointer stagger-animation';
+      card.style.animationDelay = `${index * 0.1}s`;
 
-  const hasValidImage = item.image && item.image.startsWith('http');
-  
-  const imageHtml = hasValidImage
-    ? `
-      <div class="relative">
-        <img 
-          src="${item.image}" 
-          alt="${escapeHtml(item.name)}" 
-          class="w-full h-48 object-cover" 
-          loading="lazy"
-          onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
-        />
-        <div style="display:none;" class="h-48 bg-gray-100 flex items-center justify-center">
-          <i class="fas fa-image text-gray-400 text-3xl"></i>
+      const hasValidImage = item.image && item.image.startsWith('http');
+      
+      const imageHtml = hasValidImage
+        ? `
+          <div class="relative overflow-hidden">
+            <img 
+              src="${item.image}" 
+              alt="${escapeHtml(item.name)}" 
+              class="w-full h-56 object-cover transition-transform duration-500 group-hover:scale-110" 
+              loading="lazy"
+              onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+            />
+            <div style="display:none;" class="h-56 bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
+              <i class="fas fa-image text-gray-400 text-4xl"></i>
+            </div>
+            <div class="image-overlay">
+              <span>Lihat Detail</span>
+            </div>
+            <div class="absolute top-4 right-4">
+              <div class="bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-semibold text-gray-800">
+                <i class="fas fa-calendar-alt mr-1"></i>
+                ${escapeHtml(item.hari || 'TBA')}
+              </div>
+            </div>
+          </div>`
+        : `
+          <div class="h-56 bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center relative overflow-hidden">
+            <i class="fas fa-image text-gray-400 text-4xl"></i>
+            <div class="image-overlay">
+              <span>Lihat Detail</span>
+            </div>
+            <div class="absolute top-4 right-4">
+              <div class="bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-semibold text-gray-800">
+                <i class="fas fa-calendar-alt mr-1"></i>
+                ${escapeHtml(item.hari || 'TBA')}
+              </div>
+            </div>
+          </div>`;
+
+      const captionHtml = item.caption
+        ? `<p class="text-sm text-gray-500 mt-3 italic leading-relaxed">${escapeHtml(item.caption)}</p>`
+        : '';
+
+      card.innerHTML = `
+        ${imageHtml}
+        <div class="p-6">
+          <h3 class="font-bold text-gray-900 mb-3 text-lg leading-tight line-clamp-2">
+            ${escapeHtml(item.name || 'Tanpa Nama')}
+          </h3>
+          <div class="flex items-center text-gray-600 mb-2">
+            <div class="w-8 h-8 bg-primary/10 rounded-lg flex items-center justify-center mr-3">
+              <i class="far fa-calendar text-primary text-sm"></i>
+            </div>
+            <span class="font-medium">${item.tanggal ? formatDate(item.tanggal) : 'Tanggal belum ditentukan'}</span>
+          </div>
+          ${captionHtml}
+          <div class="mt-4 pt-4 border-t border-gray-100">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-semibold text-gray-500 uppercase tracking-wide">Kegiatan KPU</span>
+              <i class="fas fa-arrow-right text-primary"></i>
+            </div>
+          </div>
         </div>
-      </div>`
-    : `
-      <div class="h-48 bg-gray-100 flex items-center justify-center">
-        <i class="fas fa-image text-gray-400 text-3xl"></i>
-      </div>`;
+      `;
 
-  const captionHtml = item.caption
-    ? `<p class="text-sm text-gray-500 mt-1 italic">${escapeHtml(item.caption)}</p>`
-    : '';
-
-  card.innerHTML = `
-    ${imageHtml}
-    <div class="p-4">
-      <h3 class="font-semibold text-gray-900 mb-2 line-clamp-2 leading-snug">
-        ${escapeHtml(item.name || 'Tanpa Nama')}
-      </h3>
-      <div class="flex items-center text-sm text-gray-500">
-        <i class="far fa-calendar mr-2"></i>
-        <span>${escapeHtml(item.hari || '')} ${item.tanggal ? '• ' + formatDate(item.tanggal) : ''}</span>
-      </div>
-      ${captionHtml}
-    </div>
-  `;
-
-  card.addEventListener('click', () => loadActivityDetail(item.id, item));
-  return card;
-}
-
-
-    // Search and Filter
-    function filterActivities(searchTerm) {
-      const term = searchTerm.toLowerCase();
-      filteredData = activitiesData.filter(item => 
-        (item.name || '').toLowerCase().includes(term) ||
-        (item.hari || '').toLowerCase().includes(term)
-      );
-      renderActivities();
+      card.addEventListener('click', () => loadActivityDetail(item.id, item));
+      return card;
     }
 
-    // Render Activities Grid
+    // Search and Filter with debounce
+    let searchTimeout;
+    function filterActivities(searchTerm) {
+      clearTimeout(searchTimeout);
+      searchTimeout = setTimeout(() => {
+        const term = searchTerm.toLowerCase();
+        filteredData = activitiesData.filter(item => 
+          (item.name || '').toLowerCase().includes(term) ||
+          (item.hari || '').toLowerCase().includes(term) ||
+          (item.caption || '').toLowerCase().includes(term)
+        );
+        renderActivities();
+      }, 300);
+    }
+
+    // Render Activities Grid with stagger animation
     function renderActivities() {
       activitiesGridEl.innerHTML = '';
       
@@ -323,8 +560,8 @@ function createActivityCard(item) {
       }
       
       emptyStateEl.classList.add('hidden');
-      filteredData.forEach(item => {
-        const card = createActivityCard(item);
+      filteredData.forEach((item, index) => {
+        const card = createActivityCard(item, index);
         activitiesGridEl.appendChild(card);
       });
     }
@@ -358,6 +595,9 @@ function createActivityCard(item) {
         loadingEl.classList.add('hidden');
         mainContentEl.classList.remove('hidden');
         
+        // Add fade in animation to main content
+        mainContentEl.classList.add('fade-in');
+        
         renderActivities();
         
       } catch (error) {
@@ -365,33 +605,39 @@ function createActivityCard(item) {
       }
     }
 
-    // Load Activity Detail
+    // Load Activity Detail with improved design
     async function loadActivityDetail(id, itemData) {
       try {
         hideError();
         showDetailView();
         
-        // Show article header immediately
+        // Show enhanced article header
         articleHeaderEl.innerHTML = `
-          <div class="flex items-start space-x-4">
+          <div class="flex items-start space-x-6">
             <div class="flex-shrink-0">
-              <div class="w-16 h-16 bg-primary/10 rounded-lg flex items-center justify-center">
-                <i class="fas fa-calendar-alt text-primary text-xl"></i>
+              <div class="w-20 h-20 bg-gradient-to-br from-primary to-secondary rounded-2xl flex items-center justify-center shadow-lg">
+                <i class="fas fa-calendar-alt text-white text-2xl"></i>
               </div>
             </div>
             <div class="flex-1 min-w-0">
-              <h1 class="text-2xl font-bold text-gray-900 mb-2">${escapeHtml(itemData.name || 'Detail Kegiatan')}</h1>
-              <div class="flex items-center text-gray-600 space-x-4">
-                <div class="flex items-center">
-                  <i class="far fa-calendar mr-2"></i>
-                  <span>${escapeHtml(itemData.hari || '')} ${itemData.tanggal ? '• ' + formatDate(itemData.tanggal) : ''}</span>
+              <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4 leading-tight">${escapeHtml(itemData.name || 'Detail Kegiatan')}</h1>
+              <div class="flex flex-wrap items-center gap-4 text-gray-600">
+                <div class="flex items-center bg-gray-50 px-4 py-2 rounded-xl">
+                  <i class="far fa-calendar mr-2 text-primary"></i>
+                  <span class="font-medium">${escapeHtml(itemData.hari || '')}</span>
                 </div>
+                ${itemData.tanggal ? `
+                  <div class="flex items-center bg-gray-50 px-4 py-2 rounded-xl">
+                    <i class="far fa-clock mr-2 text-primary"></i>
+                    <span class="font-medium">${formatDate(itemData.tanggal)}</span>
+                  </div>
+                ` : ''}
               </div>
             </div>
           </div>
         `;
         
-        // Show loading for content
+        // Show enhanced loading for content
         detailLoadingEl.classList.remove('hidden');
         articleBodyEl.innerHTML = '';
         
@@ -418,17 +664,26 @@ function createActivityCard(item) {
         
         detailLoadingEl.classList.add('hidden');
         
-        articleBodyEl.innerHTML = data.html || '<p class="text-gray-500 italic">Tidak ada konten tersedia.</p>';
+        articleBodyEl.innerHTML = data.html || `
+          <div class="text-center py-16">
+            <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <i class="fas fa-file-alt text-gray-400 text-xl"></i>
+            </div>
+            <p class="text-gray-500 text-lg">Tidak ada konten tersedia.</p>
+          </div>
+        `;
         
       } catch (error) {
         detailLoadingEl.classList.add('hidden');
         articleBodyEl.innerHTML = `
-          <div class="bg-red-50 border border-red-200 rounded-lg p-4">
+          <div class="bg-gradient-to-r from-red-50 to-red-100 border border-red-200 rounded-2xl p-8">
             <div class="flex items-center">
-              <i class="fas fa-exclamation-triangle text-red-500 mr-3"></i>
+              <div class="w-12 h-12 bg-red-100 rounded-xl flex items-center justify-center mr-4">
+                <i class="fas fa-exclamation-triangle text-red-500 text-xl"></i>
+              </div>
               <div>
-                <h3 class="text-red-800 font-medium">Error</h3>
-                <p class="text-red-700 text-sm mt-1">${escapeHtml(error.message)}</p>
+                <h3 class="text-red-800 font-bold text-lg">Terjadi Kesalahan</h3>
+                <p class="text-red-700 mt-1">${escapeHtml(error.message)}</p>
               </div>
             </div>
           </div>
@@ -442,10 +697,20 @@ function createActivityCard(item) {
       filterActivities(e.target.value);
     });
 
+    // Add keyboard shortcut for search
+    document.addEventListener('keydown', (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        searchInputEl.focus();
+      }
+    });
+
     backButtonEl.addEventListener('click', showGridView);
 
-    // Initialize
-    document.addEventListener('DOMContentLoaded', loadActivities);
+    // Initialize with fade in effect
+    document.addEventListener('DOMContentLoaded', () => {
+      setTimeout(loadActivities, 300);
+    });
   </script>
 
 </body>
